@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- Convert an xacro and put on parameter server -->
+  <param name = "robot_description" command ="$(find xacro)/xacro '$(find diff_wheeled_robot)/urdf/diff_wheeled_robot_with_laser.xacro' "/>
+
+  <arg name="x" default="0.8"/>
+  <arg name="y" default="0.8"/>
+  <arg name="z" default="0"/>
+  <arg name="yaw" default="1.57"/>  
+
+
+  <!-- Gazebo empty world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find robot_gazebo)worlds/apartment/model.world"/>
+  </include>
+  
+  <!-- Spawn the robot model -->
+  <node name="spawn_model" pkg="gazebo_ros" type="spawn_model"
+        args="-urdf -param robot_description -model dbot -x $(arg x) -y $(arg y) -z $(arg z) -Y $(arg yaw)" />
+
+  <!-- gmapping launch file -->
+  <!-- <include file="$(find diff_wheeled_robot)/launch/gmapping.launch"/> -->
+  
+  <!-- rviz launch file -->
+  <include file="$(find diff_wheeled_robot)/launch/view_mobile_robot.launch"/>
+  
+  
+</launch>
